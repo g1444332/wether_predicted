@@ -19,14 +19,14 @@ class Window(QtWidgets.QMainWindow):
 
     def open_table_window(self):
         table_window = TableWindow()
-        table_window.load_data_from_csv("data.csv")
+        table_window.load_data_from_csv("data_day.csv")
         table_window.exec_()
 
     def show_graph_all(self):
         dates = []
         temperatures = []
 
-        with open("data.csv", "r", newline = "") as file:
+        with open("data/data_day.csv", "r", newline = "") as file:
             reader = csv.DictReader(file)
             for row in reader:
                 date = datetime.strptime(row['datetime'], '%Y%m%dT%H%M')
@@ -83,6 +83,8 @@ app = QtWidgets.QApplication(sys.argv)
 window = Window()
 window.show()
 sys.exit(app.exec_())
+
+
 
 #         self.scene = QtWidgets.QGraphicsScene()
 #         self.graphicsView.setScene(self.scene)

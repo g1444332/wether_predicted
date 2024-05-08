@@ -1,13 +1,4 @@
-location,Basel,Basel,Basel
-lat,47.75000,47.75000,47.75000
-lon,7.50000,7.50000,7.50000
-asl,363.653,363.653,363.653
-variable,Temperature,Temperature,Temperature
-unit,°C,°C,°C
-level,2 m elevation corrected,2 m elevation corrected,2 m elevation corrected
-resolution,daily,daily,daily
-aggregation,Maximum,Minimum,Mean
-timestamp,Basel Temperature [2 m elevation corrected],Basel Temperature [2 m elevation corrected],Basel Temperature [2 m elevation corrected]
+datetime,temperatureMax,temperatureMin,temperatureMean
 20220318T0000,13.120245,7.6602454,10.008996
 20220319T0000,14.370245,4.4302454,9.103579
 20220320T0000,17.760244,2.8402452,8.984411
