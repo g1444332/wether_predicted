@@ -2,6 +2,7 @@ import sys
 import csv
 import matplotlib.pyplot as plt
 from PyQt5 import QtCore, QtGui, QtWidgets
+import pandas as pd
 from PyQt5.QtCore import QDate
 from design import Ui_MainWindow
 from datetime import datetime
@@ -20,19 +21,20 @@ class PlotViewer(QtWidgets.QWidget):
         layout.addWidget(self.figureCanvas)
         self.setLayout(layout)
 
-    def PlotPredict(self, days):
+    def PlotPredict(self, date_range: pd.DatetimeIndex):
         self.ax = self.figure.add_subplot()
         data = train.load_data('data/data_4_years.csv')
         regressorLSTM = train.load_model("modelLSTM.h5")
         X_train, y_train, X_test, y_test, scaler, test_data = train.prepare_data(data)
-        forecast_data = train.forecast_temperature(days, regressorLSTM, X_test, scaler)
-        train.plot_forecast(self.ax, days, data, forecast_data, test_data)
+        forecast_data = train.forecast_temperature(data, date_range, regressorLSTM, X_test, scaler)
+
+        train.plot_forecast(self.ax, date_range, data, forecast_data, test_data)
 
     def PlotAll(self):
         dates = []
         temperatures = []
 
-        with open("./data/data_day.csv", "r", newline = "") as file:
+        with open("./data/data_4_years.csv.csv", "r", newline = "") as file:
             reader = csv.DictReader(file)
             for row in reader:
                 date = datetime.strptime(row['datetime'], '%Y%m%dT%H%M')
@@ -54,6 +56,7 @@ class Window(QtWidgets.QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.setWindowTitle("Передбачення Температури")
         self.ui.pushButton_7.clicked.connect(self.open_table_window)
         self.ui.pushButton_4.clicked.connect(self.show_graph_all)
         self.ui.pushButton_3.clicked.connect(self.show_graph_predict)
@@ -72,10 +75,14 @@ class Window(QtWidgets.QMainWindow):
         self.scene.addWidget(self.plot_viewer)
 
     def show_graph_predict(self):
-        days = self.ui.date_from.date().daysTo(self.ui.date_to.date())
+        date_from = self.ui.date_from.date().toString("yyyy-MM-dd")
+        date_to = self.ui.date_to.date().toString("yyyy-MM-dd")
+
+        date_range = pd.date_range(start=pd.to_datetime(date_from), end=pd.to_datetime(date_to))
 
         self.plot_viewer = PlotViewer()
-        self.plot_viewer.PlotPredict(days)
+        self.plot_viewer.PlotPredict(date_range)
+
         self.scene = QtWidgets.QGraphicsScene(self)
         self.ui.graphicsView.setScene(self.scene)
         self.scene.addWidget(self.plot_viewer)

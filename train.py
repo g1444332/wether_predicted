@@ -52,11 +52,18 @@ def prepare_data(data):
     return X_train, y_train, X_test, y_test, scaler, test_data
 
 
-def forecast_temperature(days, regressor, X_test, scaler):
+def forecast_temperature(data, data_range: pd.DatetimeIndex, regressor, X_test, scaler):
     last_X = X_test[-1]
     forecast = []
 
+    print()
+    days = len(pd.date_range(start=data.index[-1], end=data_range[0]))
+    data_range_days = len(data_range)
+
     for _ in range(days):
+        last_X = np.roll(last_X, -1)
+
+    for _ in range(data_range_days):
         next_pred = regressor.predict(last_X.reshape(1, -1, 1))
         forecast.append(next_pred[0, 0])
         last_X = np.roll(last_X, -1)
@@ -66,9 +73,9 @@ def forecast_temperature(days, regressor, X_test, scaler):
     return forecast_data
 
 
-def plot_forecast(ax, days, data, forecast_data, test_data):
+def plot_forecast(ax, date_range: pd.DatetimeIndex, data, forecast_data, test_data):
     ax.plot(data.index, data.temperatureMean, label = 'Actual Data')
-    ax.plot(pd.date_range(test_data.index[-1], periods = days, freq = 'D'), forecast_data, label = 'Predict Data',
+    ax.plot(date_range, forecast_data, label = 'Predict Data',
             linestyle = '--')
     ax.set_xlabel('Дата')
     ax.set_ylabel('Температура')

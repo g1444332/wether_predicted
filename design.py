@@ -194,6 +194,6 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton_6.setText(_translate("MainWindow", "Передбачити"))
-        self.pushButton_7.setText(_translate("MainWindow", "Всі дані"))
+        self.pushButton_7.setText(_translate("MainWindow", "Всі Дані"))
         self.pushButton_4.setText(_translate("MainWindow", "Весь Гріфік"))
         self.pushButton_3.setText(_translate("MainWindow", "Весь Графік с Передбаченням"))
